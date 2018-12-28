@@ -25,6 +25,9 @@ print(y_test)
 
 model = svm.SVC()
 model.fit(X_train, y_train)
+print(model.predict([[23.7,26.89,464,861,0.00487710983719076]]))
+print(model.predict([[21,23.29,0,519,0.00357688024903438]]))
+
 
 accuracy = model.score(X_test, y_test)
 print(accuracy)
