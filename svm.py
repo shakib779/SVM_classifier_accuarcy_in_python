@@ -8,26 +8,26 @@ test = pd.read_csv('test.txt')
 train.drop(['id', 'date'], 1, inplace = True)
 test.drop(['id', 'date'], 1, inplace = True)
 
-print(train)
-print(test)
+#print(train)
+#print(test)
 
 X_train = np.array(train.drop(['Occupancy'], 1))
 y_train = np.array(train['Occupancy'])
 
-print(X_train)
-print(y_train)
+#print(X_train)
+#print(y_train)
 
 X_test = np.array(test.drop(['Occupancy'], 1))
 y_test = np.array(test['Occupancy'])
 
-print(X_test)
-print(y_test)
+#print(X_test)
+#print(y_test)
 
-model = svm.SVC(gamma=1.0000000000000001e-09)
+model = svm.SVC(gamma = 'auto')
 model.fit(X_train, y_train)
-print(model.predict([[23.7,26.89,464,861,0.00487710983719076]]))
-print(model.predict([[21,23.29,0,519,0.00357688024903438]]))
+#print(model.predict([[23.7,26.89,464,861,0.00487710983719076]]))
+#print(model.predict([[21,23.29,0,519,0.00357688024903438]]))
 
 
 accuracy = model.score(X_test, y_test)
-print(accuracy)
+print('Accuracy of Model = %s' %accuracy)
