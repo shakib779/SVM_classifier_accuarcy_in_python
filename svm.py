@@ -1,33 +1,27 @@
 import numpy as np
-from sklearn import svm
 import pandas as pd
+from sklearn import svm
+from sklearn.model_selection import StratifiedShuffleSplit
 
+dataset = pd.read_csv('train.txt')
+dataset.drop(['id', 'date'], 1, inplace = True)
 
-train = pd.read_csv('train.txt')
-test = pd.read_csv('test.txt')
-train.drop(['id', 'date'], 1, inplace = True)
-test.drop(['id', 'date'], 1, inplace = True)
+X = np.array(dataset.drop(['Occupancy'], 1))
+y = np.array(dataset['Occupancy'])
 
-#print(train)
-#print(test)
+kf = StratifiedShuffleSplit(n_splits = 10, test_size = 0.1, random_state = 0)
 
-X_train = np.array(train.drop(['Occupancy'], 1))
-y_train = np.array(train['Occupancy'])
+sum = 0.0
 
-#print(X_train)
-#print(y_train)
+for train_index, test_index in kf.split(X, y):
+	#print("TRAIN:", train_index, "TEST:", test_index)
+	X_train, X_test = X[train_index], X[test_index]
+	y_train, y_test = y[train_index], y[test_index]
+	model = svm.SVC(gamma = 'auto')
+	model.fit(X_train, y_train)
+	accuracy = model.score(X_test, y_test)
+	sum += accuracy
+	#print(accuracy)
 
-X_test = np.array(test.drop(['Occupancy'], 1))
-y_test = np.array(test['Occupancy'])
-
-#print(X_test)
-#print(y_test)
-
-model = svm.SVC(gamma = 'auto')
-model.fit(X_train, y_train)
-#print(model.predict([[23.7,26.89,464,861,0.00487710983719076]]))
-#print(model.predict([[21,23.29,0,519,0.00357688024903438]]))
-
-
-accuracy = model.score(X_test, y_test)
+accuracy = sum/(kf.get_n_splits(X, y)*1.0);
 print('Accuracy of Model = %s' %accuracy)
